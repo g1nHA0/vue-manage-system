@@ -47,6 +47,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { Lock, Service, User } from "@element-plus/icons-vue";
 import axios, { Axios } from "axios";
 import service from "../utils/request";
+import store from "@/store";
 
 interface LoginInfo {
   username: string;
@@ -86,8 +87,11 @@ const submitForm = (formEl: FormInstance | undefined) => {
         if (res.data.code == 200) {
           ElMessage.success("登录成功");
           localStorage.setItem("ms_username", param.username);
-          const keys = permiss.defaultList[param.username == "admin" ? "admin" : "user"];
+          const keys =
+            permiss.defaultList[param.username == "admin" ? "admin" : "user"];
           permiss.handleSet(keys);
+          store.state.Authorization = res.data.token;
+          localStorage.setItem("token", res.data.token);
           localStorage.setItem("ms_keys", JSON.stringify(keys));
           router.push("/");
         } else {
