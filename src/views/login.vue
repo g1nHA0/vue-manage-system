@@ -38,16 +38,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import { useTagsStore } from "../store/tags";
-import { usePermissStore } from "../store/permiss";
-import { useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
-import type { FormInstance, FormRules } from "element-plus";
-import { Lock, Service, User } from "@element-plus/icons-vue";
-import axios, { Axios } from "axios";
-import service from "../utils/request";
 import store from "@/store";
+import { Lock, User } from "@element-plus/icons-vue";
+import type { FormInstance, FormRules } from "element-plus";
+import { ElMessage } from "element-plus";
+import md5 from "js-md5";
+import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+import { usePermissStore } from "../store/permiss";
+import { useTagsStore } from "../store/tags";
+import service from "../utils/request";
 
 interface LoginInfo {
   username: string;
@@ -55,11 +55,14 @@ interface LoginInfo {
 }
 
 const router = useRouter();
-const param = reactive<LoginInfo>({
+let param = reactive<LoginInfo>({
   username: "admin",
   password: "123123",
 });
-
+let finalParam = reactive<LoginInfo>({
+  username: param.username,
+  password: md5(param.password),
+});
 const rules: FormRules = {
   username: [
     {
@@ -77,9 +80,9 @@ const submitForm = (formEl: FormInstance | undefined) => {
   formEl.validate((valid: boolean) => {
     if (valid) {
       service({
-        url: "http://127.0.0.1:8082/api/user/web/login",
+        url: "api/user/web/login",
         method: "post",
-        data: param,
+        data: finalParam,
         headers: {
           "Content-Type": "application/json",
         },

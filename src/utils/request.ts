@@ -1,15 +1,17 @@
-import axios, {
-  AxiosInstance,
-  AxiosError,
-  AxiosResponse,
-  AxiosRequestConfig,
-} from "axios";
-const service: AxiosInstance = axios.create({
-  timeout: 5000,
-});
 import router from "@/router/index";
 import store from "@/store/index";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
 import { ElMessage } from "element-plus";
+const baseUrl = "http://127.0.0.1:8082/funfind/";
+const service: AxiosInstance = axios.create({
+  timeout: 5000,
+  baseURL: baseUrl,
+});
 service.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     // 每次发送请求之前判断vuex中是否存在token

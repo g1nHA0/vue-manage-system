@@ -15,9 +15,17 @@
           placeholder="用户名"
           class="handle-input mr10"
         ></el-input>
-        <el-button type="primary" :icon="Search" @click="handleSearch"
-          >搜索</el-button
+        <el-select
+          v-model="query.eventType"
+          placeholder="事件类型"
+          class="handle-select mr10"
         >
+          <el-option key="1" label="失物招领" value="0"></el-option>
+          <el-option key="2" label="寻物启事" value="1"></el-option>
+        </el-select>
+        <el-button type="primary" :icon="Search" @click="handleSearch"
+          >搜索
+        </el-button>
         <el-button type="primary" :icon="Plus">新增</el-button>
       </div>
       <el-table
@@ -28,40 +36,46 @@
         header-cell-class-name="table-header"
       >
         <el-table-column
-          prop="id"
-          label="ID"
-          width="55"
-          align="center"
+          prop="corrUserNickName"
+          label="用户名"
         ></el-table-column>
-        <el-table-column prop="name" label="用户名"></el-table-column>
-        <el-table-column label="账户余额">
-          <template #default="scope">￥{{ scope.row.money }}</template>
+        <el-table-column prop="eventType" label="事件类型">
+          <template #default="scope">
+            {{ scope.row.eventType === 0 ? "失物招领" : "寻物启示" }}
+          </template>
         </el-table-column>
-        <el-table-column label="头像(查看大图)" align="center">
+        <el-table-column label="事件相关图片" align="center">
           <template #default="scope">
             <el-image
+              v-for="(item, index) in scope.row.corrFiles"
               class="table-td-thumb"
-              :src="scope.row.thumb"
+              :src="'http://localhost:8082/funfind/image/' + item.fileName"
               :z-index="10"
-              :preview-src-list="[scope.row.thumb]"
+              :preview-src-list="scope.row.corrFiles.fileName"
               preview-teleported
             >
             </el-image>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="地址"></el-table-column>
-        <el-table-column label="状态" align="center">
+        <el-table-column label="事件状态" align="center">
           <template #default="scope">
             <el-tag
               :type="
-                scope.row.state === '成功'
+                scope.row.eventState === 0
+                  ? ''
+                  : scope.row.eventState === 1
                   ? 'success'
-                  : scope.row.state === '失败'
-                  ? 'danger'
                   : ''
               "
             >
-              {{ scope.row.state }}
+              {{
+                scope.row.eventState === 0
+                  ? "进行中"
+                  : scope.row.eventState === 1
+                  ? "已完成"
+                  : ""
+              }}
             </el-tag>
           </template>
         </el-table-column>
@@ -122,18 +136,38 @@
 </template>
 
 <script setup lang="ts" name="basetable">
-import { ref, reactive } from "vue";
+import { Delete, Edit, Plus, Search } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Delete, Edit, Search, Plus } from "@element-plus/icons-vue";
-import { fetchData } from "../api/index";
+import { reactive, ref } from "vue";
+import { fetchData } from "@/api";
 
 interface TableItem {
   id: number;
-  name: string;
+  corrUserNickName: string;
+  eventState: number;
+  eventType: number;
   money: string;
   state: string;
   date: string;
   address: string;
+  addtime: string;
+  adduserid: string;
+  corrUserAvatarUrl: string;
+  corrUserId: string;
+  lostLocation: string;
+  note: string;
+  nowLocation: string;
+  remark: null;
+  title: "123123";
+  updtime: null;
+  upduserid: null;
+  corrFiles: corrFile[];
+  contactType: number;
+  contactNumber: number;
+}
+
+interface corrFile {
+  fileName: string;
 }
 
 const query = reactive({
@@ -141,14 +175,16 @@ const query = reactive({
   name: "",
   pageIndex: 1,
   pageSize: 10,
+  eventType: "0",
 });
 const tableData = ref<TableItem[]>([]);
 const pageTotal = ref(0);
 // 获取表格数据
 const getData = () => {
   fetchData().then((res) => {
-    tableData.value = res.data.list;
-    pageTotal.value = res.data.pageTotal || 50;
+    console.log(res);
+    tableData.value = res.data.data.list;
+    pageTotal.value = res.data.data.total || 0;
   });
 };
 getData();
@@ -208,21 +244,27 @@ const saveEdit = () => {
 }
 
 .handle-input {
-  width: 300px;
+  width: 100px;
 }
+
 .table {
   width: 100%;
   font-size: 14px;
 }
+
 .red {
   color: #f56c6c;
 }
+
 .mr10 {
   margin-right: 10px;
 }
+
 .table-td-thumb {
+  float: left;
+  flex-wrap: wrap;
   display: block;
-  margin: auto;
+  margin: 1px;
   width: 40px;
   height: 40px;
 }
