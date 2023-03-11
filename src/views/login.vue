@@ -47,7 +47,7 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { usePermissStore } from "../store/permiss";
 import { useTagsStore } from "../store/tags";
-import service from "../utils/request";
+import service from "@utils/requestUtil";
 
 interface LoginInfo {
   username: string;
