@@ -70,13 +70,11 @@
     </el-dialog>
   </div>
 </template>
-
 <script setup lang="ts" name="basetable">
 import {Delete, Edit, Loading, Plus} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {reactive, ref} from "vue";
 import {deleteAnnouncements, getAnnouncements, saveOrUpdateAnnouncements} from "@/api";
-
 interface TableItem {
   id: string;
   content: string;
@@ -123,7 +121,7 @@ const handleDelete = (index: number) => {
     deleteAnnouncements(tableData.value[index].id).then((res) => {
       ElMessage.success("删除成功");
     }).catch((err) => {
-      ElMessage.error("删除成功");
+      ElMessage.error("删除失败");
     });
   })
   .catch(() => {

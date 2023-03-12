@@ -2,66 +2,68 @@
   <div>
     <div class="container">
       <div class="handle-box">
-        <el-select
-          v-model="query.address"
-          placeholder="地址"
-          class="handle-select mr10"
-        >
-          <el-option key="1" label="广东省" value="广东省"></el-option>
-          <el-option key="2" label="湖南省" value="湖南省"></el-option>
-        </el-select>
         <el-input
-          v-model="query.name"
-          placeholder="用户名"
-          class="handle-input mr10"
+            v-model="query.name"
+            placeholder="用户名"
+            class="handle-input mr10"
         ></el-input>
         <el-select
-          v-model="query.eventType"
-          placeholder="事件类型"
-          class="handle-select mr10"
+            v-model="query.eventType"
+            placeholder="事件类型"
+            class="handle-select mr10"
         >
           <el-option key="1" label="失物招领" value="0"></el-option>
           <el-option key="2" label="寻物启事" value="1"></el-option>
         </el-select>
         <el-button type="primary" :icon="Search" @click="handleSearch"
-          >搜索
+        >搜索
         </el-button>
         <el-button type="primary" :icon="Plus">新增</el-button>
       </div>
       <el-table
-        :data="tableData"
-        border
-        class="table"
-        ref="multipleTable"
-        header-cell-class-name="table-header"
+          :data="tableData"
+          border
+          class="table"
+          ref="multipleTable"
+          header-cell-class-name="table-header"
       >
         <el-table-column
-          prop="corrUserNickName"
-          label="用户名"
+            prop="corrUserNickName"
+            label="用户名"
         ></el-table-column>
         <el-table-column prop="eventType" label="事件类型">
           <template #default="scope">
-            {{ scope.row.eventType === 0 ? "失物招领" : "寻物启示" }}
+            {{ scope.row.eventType === 0 ? "失物招领" :"寻物启示"}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="eventType" label="物品类型">
+          <template #default="scope">
+            {{ scope.row.eventType === 0 ? "失物招领"
+              : scope.row.eventType === 1?"寻物启示"
+                  : scope.row.eventType === 2?"寻物启示"
+                      : scope.row.eventType === 3?"寻物启示"
+                          : scope.row.eventType === 4?"寻物启示":"寻物启示"}}
           </template>
         </el-table-column>
         <el-table-column label="事件相关图片" align="center">
           <template #default="scope">
             <el-image
-              v-for="(item, index) in scope.row.corrFiles"
-              class="table-td-thumb"
-              :src="'http://localhost:8082/funfind/image/' + item.fileName"
-              :z-index="10"
-              :preview-src-list="scope.row.corrFiles.fileName"
-              preview-teleported
+                v-for="(item, index) in scope.row.corrFiles"
+                class="table-td-thumb"
+                :src="'http://localhost:8082/funfind/image/' + item.fileName"
+                :z-index="10"
+                :preview-src-list="scope.row.corrFiles.fileName"
+                preview-teleported
             >
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
+        <el-table-column prop="lostLocation" label="丢失物品位置"></el-table-column>
+        <el-table-column prop="nowLocation" label="当前所处位置"></el-table-column>
         <el-table-column label="事件状态" align="center">
           <template #default="scope">
             <el-tag
-              :type="
+                :type="
                 scope.row.eventState === 0
                   ? ''
                   : scope.row.eventState === 1
@@ -71,30 +73,30 @@
             >
               {{
                 scope.row.eventState === 0
-                  ? "进行中"
-                  : scope.row.eventState === 1
-                  ? "已完成"
-                  : ""
+                    ? "进行中"
+                    : scope.row.eventState === 1
+                        ? "已完成"
+                        : ""
               }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="220" align="center">
+        <el-table-column label="操作" width="110" align="center">
           <template #default="scope">
+<!--            <el-button-->
+<!--                text-->
+<!--                :icon="Edit"-->
+<!--                @click="handleEdit(scope.$index, scope.row)"-->
+<!--                v-permiss="15"-->
+<!--            >-->
+<!--              编辑-->
+<!--            </el-button>-->
             <el-button
-              text
-              :icon="Edit"
-              @click="handleEdit(scope.$index, scope.row)"
-              v-permiss="15"
-            >
-              编辑
-            </el-button>
-            <el-button
-              text
-              :icon="Delete"
-              class="red"
-              @click="handleDelete(scope.$index)"
-              v-permiss="16"
+                text
+                :icon="Delete"
+                class="red"
+                @click="handleDelete(scope.$index)"
+                v-permiss="16"
             >
               删除
             </el-button>
@@ -103,12 +105,12 @@
       </el-table>
       <div class="pagination">
         <el-pagination
-          background
-          layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
-          :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
+            background
+            layout="total, prev, pager, next"
+            :current-page="query.pageIndex"
+            :page-size="query.pageSize"
+            :total="pageTotal"
+            @current-change="handlePageChange"
         ></el-pagination>
       </div>
     </div>
@@ -134,13 +136,13 @@
 </template>
 
 <script setup lang="ts" name="basetable">
-import { Delete, Edit, Plus, Search } from "@element-plus/icons-vue";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { reactive, ref } from "vue";
-import { fetchData } from "@/api";
+import {Delete, Edit, Plus, Search} from "@element-plus/icons-vue";
+import {ElMessage, ElMessageBox} from "element-plus";
+import {reactive, ref} from "vue";
+import {deleteEvent, getEvents, saveOrUpdateEvent} from "@/api";
 
 interface TableItem {
-  id: number;
+  id: string;
   corrUserNickName: string;
   eventState: number;
   eventType: number;
@@ -171,7 +173,7 @@ const pageTotal = ref(0);
 // 获取表格数据
 
 const getData = () => {
-  fetchData().then((res) => {
+  getEvents().then((res) => {
     console.log(res);
     tableData.value = res.data.data.list;
     pageTotal.value = res.data.data.total || 0;
@@ -187,7 +189,7 @@ const handleSearch = () => {
 // 分页导航
 const handlePageChange = (val: number) => {
   query.pageIndex = val;
-  getData();
+  getData(query.eventType);
 };
 
 // 删除操作
@@ -196,31 +198,58 @@ const handleDelete = (index: number) => {
   ElMessageBox.confirm("确定要删除吗？", "提示", {
     type: "warning",
   })
-    .then(() => {
+  .then(() => {
+    deleteEvent(tableData.value[index].id).then((res) => {
       ElMessage.success("删除成功");
-      tableData.value.splice(index, 1);
-    })
-    .catch(() => {});
+    }).catch((err) => {
+      ElMessage.error("删除失败");
+    });
+  })
+  .catch(() => {
+  });
+  setTimeout(() => {
+    getData();
+  }, 1000);
 };
 
 // 表格编辑时弹窗和保存
 const editVisible = ref(false);
 let form = reactive({
-  name: "",
-  address: "",
+  content: "",
+  id: "",
 });
 let idx: number = -1;
-const handleEdit = (index: number, row: any) => {
+let saveType: number = 0;
+const handleEdit = (buttonSaveType: number, index: number, row: any) => {
   idx = index;
-  form.name = row.name;
-  form.address = row.address;
+  saveType = buttonSaveType;
+  if (saveType == 1) {
+    form.content = row.content;
+    form.id = row.id;
+  } else {
+    form.content = "";
+    form.id = "";
+  }
   editVisible.value = true;
 };
 const saveEdit = () => {
   editVisible.value = false;
-  ElMessage.success(`修改第 ${idx + 1} 行成功`);
-  tableData.value[idx].name = form.name;
-  tableData.value[idx].address = form.address;
+  saveOrUpdateEvent(saveType, form).then((res) => {
+    if (saveType == 0) {
+      ElMessage.success("添加成功")
+    } else {
+      ElMessage.success("修改成功")
+    }
+  }).catch((err) => {
+    if (saveType == 0) {
+      ElMessage.error("添加失败")
+    } else {
+      ElMessage.error("修改失败")
+    }
+  });
+  setTimeout(() => {
+    getData();
+  }, 1000);
 };
 </script>
 

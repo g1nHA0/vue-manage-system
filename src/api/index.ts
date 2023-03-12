@@ -1,9 +1,25 @@
 import requestUtil from "@utils/requestUtil";
 
-export const fetchData = () => {
+// 获取全部发布
+export const getEvents = () => {
   return requestUtil({
     url: 'api/event/corr',
     method: 'get'
+  });
+};
+// 提交失物招领
+export const saveOrUpdateEvent = (saveType: number, data: any) => {
+  return requestUtil({
+    url: "api/event" + "?saveType=" + saveType,
+    method: "POST",
+    data: data,
+  });
+};
+// 删除发布
+export const deleteEvent = (eventId: string) => {
+  return requestUtil({
+    url: "api/event" + "?eventId=" + eventId,
+    method: "delete",
   });
 };
 // 获取公告

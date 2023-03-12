@@ -3,7 +3,8 @@ import store from "@/store/index";
 import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse,} from "axios";
 import {ElMessage} from "element-plus";
 
-const baseUrl = "http://127.0.0.1:8082/funfind/";
+const baseUrl = "http://127.0.0.1:9041/funfind/";
+// const baseUrl = "http://hex.g1nha0.xyz:18086/funfind/";
 const service: AxiosInstance = axios.create({
   timeout: 5000,
   baseURL: baseUrl,
