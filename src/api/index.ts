@@ -1,10 +1,11 @@
 import requestUtil from "@utils/requestUtil";
 
 // 获取全部发布
-export const getEvents = () => {
+export const getEvents = (params:any) => {
   return requestUtil({
     url: 'api/event/corr',
-    method: 'get'
+    method: 'get',
+    params:params
   });
 };
 // 提交失物招领

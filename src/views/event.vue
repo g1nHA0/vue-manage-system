@@ -121,9 +121,6 @@
         <el-form-item label="用户名">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
-        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -136,7 +133,7 @@
 </template>
 
 <script setup lang="ts" name="basetable">
-import {Delete, Edit, Plus, Search} from "@element-plus/icons-vue";
+import {Delete, Plus, Search} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {reactive, ref} from "vue";
 import {deleteEvent, getEvents, saveOrUpdateEvent} from "@/api";
@@ -172,19 +169,19 @@ const tableData = ref<TableItem[]>([]);
 const pageTotal = ref(0);
 // 获取表格数据
 
-const getData = () => {
-  getEvents().then((res) => {
+const getData = (eventType: string) => {
+  getEvents({eventType:Number(eventType)}).then((res) => {
     console.log(res);
     tableData.value = res.data.data.list;
     pageTotal.value = res.data.data.total || 0;
   });
 };
-getData();
+getData(query.eventType);
 
 // 查询操作
 const handleSearch = () => {
   query.pageIndex = 1;
-  getData();
+  getData(query.eventType);
 };
 // 分页导航
 const handlePageChange = (val: number) => {
@@ -208,13 +205,14 @@ const handleDelete = (index: number) => {
   .catch(() => {
   });
   setTimeout(() => {
-    getData();
+    getData(query.eventType);
   }, 1000);
 };
 
 // 表格编辑时弹窗和保存
 const editVisible = ref(false);
 let form = reactive({
+  name: "",
   content: "",
   id: "",
 });
@@ -248,7 +246,7 @@ const saveEdit = () => {
     }
   });
   setTimeout(() => {
-    getData();
+    getData(query.eventType);
   }, 1000);
 };
 </script>
