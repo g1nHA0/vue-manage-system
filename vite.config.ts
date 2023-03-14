@@ -8,6 +8,15 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 export default defineConfig({
   base: "/vue-manage-system/",
+  build: {
+    rollupOptions: {
+      output: {
+        preferConst: true,
+        inlineDynamicImports: true,
+        manualChunks: undefined,
+      },
+    },
+  },
   plugins: [
     vue(),
     VueSetupExtend(),
