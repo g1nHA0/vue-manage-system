@@ -33,16 +33,18 @@
         ></el-table-column>
         <el-table-column prop="eventType" label="事件类型">
           <template #default="scope">
-            {{ scope.row.eventType === 0 ? "失物招领" :"寻物启示"}}
+            {{ scope.row.eventType === 0 ? "失物招领" : "寻物启示" }}
           </template>
         </el-table-column>
         <el-table-column prop="eventType" label="物品类型">
           <template #default="scope">
-            {{ scope.row.eventType === 0 ? "失物招领"
-              : scope.row.eventType === 1?"寻物启示"
-                  : scope.row.eventType === 2?"寻物启示"
-                      : scope.row.eventType === 3?"寻物启示"
-                          : scope.row.eventType === 4?"寻物启示":"寻物启示"}}
+            {{
+              scope.row.eventType === 0 ? "失物招领"
+                  : scope.row.eventType === 1 ? "寻物启示"
+                      : scope.row.eventType === 2 ? "寻物启示"
+                          : scope.row.eventType === 3 ? "寻物启示"
+                              : scope.row.eventType === 4 ? "寻物启示" : "寻物启示"
+            }}
           </template>
         </el-table-column>
         <el-table-column label="事件相关图片" align="center">
@@ -52,8 +54,7 @@
                 class="table-td-thumb"
                 :src="'http://localhost:8082/funfind/image/' + item.fileName"
                 :z-index="10"
-                :preview-src-list="scope.row.corrFiles.fileName"
-                preview-teleported
+                :preview-src-list="srcList"
             >
             </el-image>
           </template>
@@ -83,14 +84,14 @@
         </el-table-column>
         <el-table-column label="操作" width="110" align="center">
           <template #default="scope">
-<!--            <el-button-->
-<!--                text-->
-<!--                :icon="Edit"-->
-<!--                @click="handleEdit(scope.$index, scope.row)"-->
-<!--                v-permiss="15"-->
-<!--            >-->
-<!--              编辑-->
-<!--            </el-button>-->
+            <!--            <el-button-->
+            <!--                text-->
+            <!--                :icon="Edit"-->
+            <!--                @click="handleEdit(scope.$index, scope.row)"-->
+            <!--                v-permiss="15"-->
+            <!--            >-->
+            <!--              编辑-->
+            <!--            </el-button>-->
             <el-button
                 text
                 :icon="Delete"
@@ -158,6 +159,10 @@ interface corrFile {
   fileName: string;
 }
 
+const srcList: string[] = [
+  "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
+  "https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg"
+]
 const query = reactive({
   address: "",
   name: "",
@@ -170,7 +175,7 @@ const pageTotal = ref(0);
 // 获取表格数据
 
 const getData = (eventType: string) => {
-  getEvents({eventType:Number(eventType)}).then((res) => {
+  getEvents({eventType: Number(eventType)}).then((res) => {
     console.log(res);
     tableData.value = res.data.data.list;
     pageTotal.value = res.data.data.total || 0;
