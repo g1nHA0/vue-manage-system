@@ -121,6 +121,7 @@ tags.clearTags();
   background-image: url(../assets/img/login-bg.jpg);
   background-size: 100%;
 }
+
 .ms-title {
   width: 100%;
   line-height: 50px;
@@ -129,6 +130,7 @@ tags.clearTags();
   color: #fff;
   border-bottom: 1px solid #ddd;
 }
+
 .ms-login {
   position: absolute;
   left: 50%;
@@ -139,17 +141,21 @@ tags.clearTags();
   background: rgba(255, 255, 255, 0.3);
   overflow: hidden;
 }
+
 .ms-content {
   padding: 30px 30px;
 }
+
 .login-btn {
   text-align: center;
 }
+
 .login-btn button {
   width: 100%;
   height: 36px;
   margin-bottom: 10px;
 }
+
 .login-tips {
   font-size: 12px;
   line-height: 30px;

@@ -1,15 +1,15 @@
-import {defineStore} from 'pinia';
+import { defineStore } from "pinia";
 
-export const useSidebarStore = defineStore('sidebar', {
-    state: () => {
-        return {
-            collapse: false
-        };
+export const useSidebarStore = defineStore("sidebar", {
+  state: () => {
+    return {
+      collapse: false,
+    };
+  },
+  getters: {},
+  actions: {
+    handleCollapse() {
+      this.collapse = !this.collapse;
     },
-    getters: {},
-    actions: {
-        handleCollapse() {
-            this.collapse = !this.collapse;
-        }
-    }
+  },
 });

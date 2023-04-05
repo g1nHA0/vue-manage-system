@@ -3,10 +3,10 @@
     <!-- 折叠按钮 -->
     <div class="collapse-btn" @click="collapseChage">
       <el-icon v-if="sidebar.collapse">
-        <Expand/>
+        <Expand />
       </el-icon>
       <el-icon v-else>
-        <Fold/>
+        <Fold />
       </el-icon>
     </div>
     <div class="logo">后台管理系统</div>
@@ -24,19 +24,21 @@
         <!--					<span class="btn-bell-badge" v-if="message"></span>-->
         <!--				</div>-->
         <!-- 用户头像 -->
-        <el-avatar class="user-avator" :size="30" :src="imgurl"/>
+        <el-avatar class="user-avator" :size="30" :src="imgurl" />
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
-					<span class="el-dropdown-link">
-						{{ username }}
-						<el-icon class="el-icon--right">
-							<arrow-down/>
-						</el-icon>
-					</span>
+          <span class="el-dropdown-link">
+            {{ username }}
+            <el-icon class="el-icon--right">
+              <arrow-down />
+            </el-icon>
+          </span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="user">个人中心</el-dropdown-item>
-              <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
+              <el-dropdown-item divided command="loginout"
+                >退出登录</el-dropdown-item
+              >
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -45,12 +47,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import {onMounted} from 'vue';
-import {useSidebarStore} from '../store/sidebar';
-import {useRouter} from 'vue-router';
-import imgurl from '../assets/img/img.jpg';
+import { onMounted } from "vue";
+import { useSidebarStore } from "../store/sidebar";
+import { useRouter } from "vue-router";
+import imgurl from "../assets/img/img.jpg";
 
-const username: string | null = localStorage.getItem('ms_username');
+const username: string | null = localStorage.getItem("ms_username");
 const message: number = 2;
 
 const sidebar = useSidebarStore();
@@ -68,11 +70,11 @@ onMounted(() => {
 // 用户名下拉菜单选择事件
 const router = useRouter();
 const handleCommand = (command: string) => {
-  if (command == 'loginout') {
-    localStorage.removeItem('ms_username');
-    router.push('/login');
-  } else if (command == 'user') {
-    router.push('/user');
+  if (command == "loginout") {
+    localStorage.removeItem("ms_username");
+    router.push("/login");
+  } else if (command == "user") {
+    router.push("/user");
   }
 };
 </script>

@@ -1,11 +1,11 @@
 import requestUtil from "@utils/requestUtil";
 
 // 获取全部发布
-export const getEvents = (params:any) => {
+export const getEvents = (params: any) => {
   return requestUtil({
-    url: 'api/event/corr',
-    method: 'get',
-    params:params
+    url: "api/event/corr",
+    method: "get",
+    params: params,
   });
 };
 // 提交失物招领
@@ -35,7 +35,7 @@ export const saveOrUpdateAnnouncements = (saveType: number, data: any) => {
   return requestUtil({
     url: "api/announcement",
     method: "POST",
-    params: {saveType: saveType},
+    params: { saveType: saveType },
     data: data,
   });
 };
@@ -44,6 +44,6 @@ export const deleteAnnouncements = (announcementId: string) => {
   return requestUtil({
     url: "api/announcement",
     method: "DELETE",
-    params: {announcementId: announcementId}
+    params: { announcementId: announcementId },
   });
 };

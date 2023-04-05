@@ -3,18 +3,18 @@
     <div class="container">
       <div class="handle-box">
         <el-button type="primary" :icon="Loading" @click="handleSearch"
-        >刷新
+          >刷新
         </el-button>
-        <el-button type="primary" :icon="Plus"
-                   @click="handleEdit(0,0, 0)">新增
+        <el-button type="primary" :icon="Plus" @click="handleEdit(0, 0, 0)"
+          >新增
         </el-button>
       </div>
       <el-table
-          :data="tableData"
-          border
-          class="table"
-          ref="multipleTable"
-          header-cell-class-name="table-header"
+        :data="tableData"
+        border
+        class="table"
+        ref="multipleTable"
+        header-cell-class-name="table-header"
       >
         <el-table-column type="index" label="序号" width="80"></el-table-column>
         <el-table-column prop="content" label="公告详情"></el-table-column>
@@ -23,19 +23,19 @@
         <el-table-column label="操作" width="220" align="center">
           <template #default="scope">
             <el-button
-                text
-                :icon="Edit"
-                @click="handleEdit(1,scope.$index, scope.row)"
-                v-permiss="15"
+              text
+              :icon="Edit"
+              @click="handleEdit(1, scope.$index, scope.row)"
+              v-permiss="15"
             >
               编辑
             </el-button>
             <el-button
-                text
-                :icon="Delete"
-                class="red"
-                v-permiss="16"
-                @click="handleDelete(scope.$index)"
+              text
+              :icon="Delete"
+              class="red"
+              v-permiss="16"
+              @click="handleDelete(scope.$index)"
             >
               删除
             </el-button>
@@ -44,12 +44,12 @@
       </el-table>
       <div class="pagination">
         <el-pagination
-            background
-            layout="total, prev, pager, next"
-            :current-page="query.pageIndex"
-            :page-size="query.pageSize"
-            :total="pageTotal"
-            @current-change="handlePageChange"
+          background
+          layout="total, prev, pager, next"
+          :current-page="query.pageIndex"
+          :page-size="query.pageSize"
+          :total="pageTotal"
+          @current-change="handlePageChange"
         ></el-pagination>
       </div>
     </div>
@@ -71,10 +71,15 @@
   </div>
 </template>
 <script setup lang="ts" name="basetable">
-import {Delete, Edit, Loading, Plus} from "@element-plus/icons-vue";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {reactive, ref} from "vue";
-import {deleteAnnouncements, getAnnouncements, saveOrUpdateAnnouncements} from "@/api";
+import { Delete, Edit, Loading, Plus } from "@element-plus/icons-vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { reactive, ref } from "vue";
+import {
+  deleteAnnouncements,
+  getAnnouncements,
+  saveOrUpdateAnnouncements,
+} from "@/api";
+
 interface TableItem {
   id: string;
   content: string;
@@ -117,15 +122,16 @@ const handleDelete = (index: number) => {
   ElMessageBox.confirm("确定要删除吗？", "提示", {
     type: "warning",
   })
-  .then(() => {
-    deleteAnnouncements(tableData.value[index].id).then((res) => {
-      ElMessage.success("删除成功");
-    }).catch((err) => {
-      ElMessage.error("删除失败");
-    });
-  })
-  .catch(() => {
-  });
+    .then(() => {
+      deleteAnnouncements(tableData.value[index].id)
+        .then((res) => {
+          ElMessage.success("删除成功");
+        })
+        .catch((err) => {
+          ElMessage.error("删除失败");
+        });
+    })
+    .catch(() => {});
   setTimeout(() => {
     getData();
   }, 1000);
@@ -153,19 +159,21 @@ const handleEdit = (buttonSaveType: number, index: number, row: any) => {
 };
 const saveEdit = () => {
   editVisible.value = false;
-  saveOrUpdateAnnouncements(saveType, form).then((res) => {
-    if (saveType == 0) {
-      ElMessage.success("添加成功")
-    } else {
-      ElMessage.success("修改成功")
-    }
-  }).catch((err) => {
-    if (saveType == 0) {
-      ElMessage.error("添加失败")
-    } else {
-      ElMessage.error("修改失败")
-    }
-  });
+  saveOrUpdateAnnouncements(saveType, form)
+    .then((res) => {
+      if (saveType == 0) {
+        ElMessage.success("添加成功");
+      } else {
+        ElMessage.success("修改成功");
+      }
+    })
+    .catch((err) => {
+      if (saveType == 0) {
+        ElMessage.error("添加失败");
+      } else {
+        ElMessage.error("修改失败");
+      }
+    });
   setTimeout(() => {
     getData();
   }, 1000);
