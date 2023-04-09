@@ -52,9 +52,11 @@
             <el-image
                 v-for="(item, index) in scope.row.corrFiles"
                 class="table-td-thumb"
-                :src="'http://localhost:8082/funfind/image/' + item.fileName"
+                :src="'http://localhost:9088/funfind/image/' + item.fileName"
                 :z-index="10"
                 :preview-src-list="srcList"
+                :preview-teleported="true"
+                @click="handlePreview(scope.row.corrFiles)"
             >
             </el-image>
           </template>
@@ -187,6 +189,12 @@ getData(query.eventType);
 const handleSearch = () => {
   query.pageIndex = 1;
   getData(query.eventType);
+};
+const handlePreview = (file: corrFile[]) => {
+  srcList.splice(0, srcList.length);
+  file.forEach((item) => {
+    srcList.push("http://localhost:9088/funfind/image/" + item.fileName);
+  });
 };
 // 分页导航
 const handlePageChange = (val: number) => {
